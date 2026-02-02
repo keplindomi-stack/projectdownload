@@ -1,37 +1,30 @@
-const axios = require('axios');
-
 export default async function handler(req, res) {
-    // Izinkan akses dari frontend kamu
+    // Header Keamanan & CORS
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Methods', 'POST');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-    if (req.method === 'OPTIONS') {
-        return res.status(200).end();
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: "METHOD_NOT_ALLOWED" });
     }
 
     const { url } = req.body;
 
-    if (!url) {
-        return res.status(400).json({ error: "URL_NULL_EXCEPTION" });
-    }
-
     try {
-        // Menggunakan endpoint API yang lebih responsif
-        const response = await axios.get(`https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`);
-        
-        if (response.data && response.data.data) {
-            const data = response.data.data;
+        // Menggunakan fetch bawaan (Tanpa Axios)
+        const response = await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`);
+        const result = await response.json();
+
+        if (result.data) {
             return res.status(200).json({
-                title: data.title || "NO_TITLE",
-                video: data.play, 
-                music: data.music
+                title: result.data.title,
+                video: result.data.play,
+                music: result.data.music
             });
         } else {
-            return res.status(500).json({ error: "DATA_EXTRACTION_FAILED" });
+            return res.status(400).json({ error: "INVALID_URL_OR_DATA" });
         }
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: "CORE_KERNEL_PANIC" });
+        return res.status(500).json({ error: "INTERNAL_SERVER_ERROR" });
     }
 }
