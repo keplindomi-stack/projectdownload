@@ -4,62 +4,135 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>NEURAL_DOWNLOADER_V2</title>
+    <title>NEURAL_EXTRACTOR_V3</title>
     <style>
-        body { background: #050505; color: #00f2ff; font-family: 'Courier New', monospace; }
-        .grid-bg { background-image: linear-gradient(to right, #0a1a1a 1px, transparent 1px), linear-gradient(to bottom, #0a1a1a 1px, transparent 1px); background-size: 40px 40px; }
-        .neon-border { border: 1px solid #00f2ff; box-shadow: 0 0 10px #00f2ff, inset 0 0 5px #00f2ff; }
+        body { 
+            background: #050505; 
+            color: #00f2ff; 
+            font-family: 'Courier New', monospace; 
+            overflow-x: hidden;
+        }
+        .grid-bg { 
+            background-image: linear-gradient(to right, #0a1a1a 1px, transparent 1px), 
+                              linear-gradient(to bottom, #0a1a1a 1px, transparent 1px); 
+            background-size: 40px 40px; 
+        }
+        .neon-border { 
+            border: 1px solid #00f2ff; 
+            box-shadow: 0 0 15px #00f2ff, inset 0 0 5px #00f2ff; 
+            background: rgba(0, 0, 0, 0.9);
+        }
+        .animate-scan {
+            width: 100%;
+            height: 2px;
+            background: #00f2ff;
+            position: absolute;
+            animation: scan 3s infinite linear;
+            box-shadow: 0 0 10px #00f2ff;
+        }
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
     </style>
 </head>
-<body class="grid-bg min-h-screen flex items-center justify-center">
-    <div class="w-full max-w-lg p-8 neon-border bg-black/80 backdrop-blur-md relative overflow-hidden">
-        <h2 class="text-center text-xl font-bold tracking-[0.2em] mb-6 underline">EXPLOITATION_TOOL: DOWNLOADER</h2>
+<body class="grid-bg min-h-screen flex items-center justify-center p-4">
+    
+    <div class="w-full max-w-lg p-8 neon-border relative overflow-hidden">
+        <div class="animate-scan"></div>
         
-        <input type="text" id="targetUrl" placeholder="PASTE_LINK_HERE..." 
-               class="w-full bg-black border border-cyan-900 p-4 mb-4 text-cyan-300 focus:outline-none focus:border-cyan-400">
-        
-        <button onclick="executeFetch()" id="btnText"
-                class="w-full bg-cyan-900/30 border border-cyan-400 py-3 font-bold hover:bg-cyan-400 hover:text-black transition-all">
-            EXECUTE_EXTRACTION
-        </button>
+        <header class="mb-8 text-center">
+            <h1 class="text-2xl font-bold tracking-[0.3em] uppercase">Exploitation_Tool</h1>
+            <p class="text-xs text-cyan-700 mt-2">STATUS: SYSTEM_ACTIVE // MODE: EXTRACTION</p>
+        </header>
 
-        <div id="loader" class="hidden text-center mt-4 animate-pulse">EXTRACTING_DATA...</div>
+        <div class="space-y-6">
+            <div class="relative">
+                <label class="text-[10px] uppercase block mb-2 text-cyan-600">Enter_Target_URL</label>
+                <input type="text" id="targetUrl" placeholder="https://vt.tiktok.com/..." 
+                       class="w-full bg-black border border-cyan-900 p-4 text-cyan-300 focus:outline-none focus:border-cyan-400 transition-all">
+            </div>
 
-        <div id="result" class="hidden mt-8 space-y-4">
-            <div id="videoTitle" class="text-sm border-l-2 border-cyan-400 pl-2"></div>
-            <a id="dlVideo" href="#" target="_blank" class="block text-center border border-green-500 text-green-500 p-2 hover:bg-green-500 hover:text-black">DOWNLOAD_VIDEO_NO_WM</a>
-            <a id="dlMusic" href="#" target="_blank" class="block text-center border border-yellow-500 text-yellow-500 p-2 hover:bg-yellow-500 hover:text-black">DOWNLOAD_MP3_ONLY</a>
+            <button onclick="executeFetch()" id="actionBtn"
+                    class="w-full bg-cyan-900/20 border border-cyan-400 py-4 font-bold tracking-widest hover:bg-cyan-400 hover:text-black transition-all">
+                EXECUTE_EXTRACTION
+            </button>
+
+            <div id="loader" class="hidden text-center space-y-2">
+                <div class="flex justify-center space-x-2">
+                    <div class="w-2 h-2 bg-cyan-400 animate-bounce"></div>
+                    <div class="w-2 h-2 bg-cyan-400 animate-bounce [animation-delay:-.3s]"></div>
+                    <div class="w-2 h-2 bg-cyan-400 animate-bounce [animation-delay:-.5s]"></div>
+                </div>
+                <p class="text-[10px] animate-pulse">BYPASSING_WATERMARK_ENCRYPTION...</p>
+            </div>
+
+            <div id="result" class="hidden space-y-4 pt-6 border-t border-cyan-900">
+                <div class="bg-cyan-950/20 p-3 border-l-4 border-cyan-400">
+                    <p id="videoTitle" class="text-xs truncate italic"></p>
+                </div>
+                
+                <div class="grid grid-cols-1 gap-3">
+                    <a id="dlVideo" href="#" target="_blank" 
+                       class="text-center border border-green-500 text-green-500 py-3 text-sm hover:bg-green-500 hover:text-black transition-all font-bold">
+                       GET_VIDEO_NO_WM
+                    </a>
+                    <a id="dlMusic" href="#" target="_blank" 
+                       class="text-center border border-yellow-500 text-yellow-500 py-3 text-sm hover:bg-yellow-500 hover:text-black transition-all font-bold">
+                       GET_MP3_AUDIO
+                    </a>
+                </div>
+            </div>
         </div>
+
+        <footer class="mt-8 text-[8px] text-center text-cyan-900 tracking-tighter uppercase">
+            Designed_by_The_Architect_of_Code &copy; 2026
+        </footer>
     </div>
 
     <script>
         async function executeFetch() {
-            const url = document.getElementById('targetUrl').value;
+            const urlInput = document.getElementById('targetUrl').value;
             const resArea = document.getElementById('result');
             const loader = document.getElementById('loader');
+            const btn = document.getElementById('actionBtn');
             
-            if(!url) return alert("Masukkan URL!");
+            if(!urlInput) {
+                alert("INPUT_ERROR: URL is required.");
+                return;
+            }
 
+            // UI State Change
             loader.classList.remove('hidden');
             resArea.classList.add('hidden');
+            btn.disabled = true;
+            btn.classList.add('opacity-50');
 
             try {
+                // Pointing to internal Vercel API
                 const response = await fetch('/api/fetch', {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ url })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url: urlInput })
                 });
+
                 const data = await response.json();
 
-                document.getElementById('videoTitle').innerText = "DATA_ID: " + data.title;
-                document.getElementById('dlVideo').href = data.video;
-                document.getElementById('dlMusic').href = data.music;
-                
-                resArea.classList.remove('hidden');
+                if (data.video) {
+                    document.getElementById('videoTitle').innerText = "FOUND: " + (data.title || "Untitled Media");
+                    document.getElementById('dlVideo').href = data.video;
+                    document.getElementById('dlMusic').href = data.music;
+                    resArea.classList.remove('hidden');
+                } else {
+                    alert("FATAL_ERROR: " + (data.error || "Extraction failed. Check URL."));
+                }
             } catch (e) {
-                alert("Sistem Error!");
+                alert("SISTEM_CRASH: API tidak merespons. Pastikan file /api/fetch.js sudah benar.");
+                console.error(e);
             } finally {
                 loader.classList.add('hidden');
+                btn.disabled = false;
+                btn.classList.remove('opacity-50');
             }
         }
     </script>
